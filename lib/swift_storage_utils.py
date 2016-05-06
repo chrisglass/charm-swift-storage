@@ -311,9 +311,10 @@ def is_device_in_ring(dev, skip_rel_check=False, ignore_deactivated=True):
     kvstore.close()
     deactivated = []
     if devstore:
-        blk_uuid = get_device_blkid("/dev/%s" % (dev))
+        blk_uuid = get_device_blkid(dev)
         env_uuid = os.environ['JUJU_ENV_UUID']
-        masterkey = "%s@%s" % (dev, env_uuid)
+        basename = os.path.basename(dev)
+        masterkey = "%s@%s" % (basename, env_uuid)
         if (masterkey in devstore and
                 devstore[masterkey].get('blkid') == blk_uuid and
                 devstore[masterkey].get('status') == 'active'):
@@ -380,8 +381,9 @@ def remember_devices(devs):
     devstore = devstore_safe_load(kvstore.get(key='devices')) or {}
     env_uuid = os.environ['JUJU_ENV_UUID']
     for dev in devs:
-        blk_uuid = get_device_blkid("/dev/%s" % (dev))
-        key = "%s@%s" % (dev, env_uuid)
+        basename = os.path.basename(dev)
+        blk_uuid = get_device_blkid(dev)
+        key = "%s@%s" % (basename, env_uuid)
         if key in devstore and devstore[key].get('blkid') == blk_uuid:
             log("Device '%s' already in devstore (status:%s)" %
                 (dev, devstore[key].get('status')), level=DEBUG)
@@ -424,7 +426,7 @@ def setup_storage():
           perms=0o755)
     reformat = str(config('overwrite')).lower() == "true"
     for dev in determine_block_devices():
-        if is_device_in_ring(os.path.basename(dev)):
+        if is_device_in_ring(dev):
             log("Device '%s' already in the ring - ignoring" % (dev))
             continue
 

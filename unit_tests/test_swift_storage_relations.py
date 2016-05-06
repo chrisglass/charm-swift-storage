@@ -150,7 +150,7 @@ class SwiftStorageRelationsTests(CharmTestCase):
 
         mock_rel_set.assert_called_with(
             relation_id=None,
-            device='vdb', object_port=6000, account_port=6002,
+            device='/dev/vdb', object_port=6000, account_port=6002,
             zone=1, container_port=6001
         )
 
@@ -193,7 +193,7 @@ class SwiftStorageRelationsTests(CharmTestCase):
         hooks.swift_storage_relation_joined()
         args = {
             'relation_id': None,
-            'device': 'vdb', 'object_port': 6000,
+            'device': '/dev/vdb', 'object_port': 6000,
             'account_port': 6002, 'zone': 1, 'container_port': 6001,
             'private-address': '2001:db8:1::1',
         }

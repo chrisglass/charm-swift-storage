@@ -122,7 +122,6 @@ def swift_storage_relation_joined(rid=None):
     }
 
     devs = determine_block_devices() or []
-    devs = [os.path.basename(d) for d in devs]
     rel_settings['device'] = ':'.join(devs)
     # Keep a reference of devices we are adding to the ring
     remember_devices(devs)
